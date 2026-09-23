@@ -1,36 +1,122 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🗺️ GPS Track Finder
 
-## Getting Started
+**Поиск GPS-треков автопутешествий** на форумах, чатах и сайтах автомобильных путешественников.
 
-First, run the development server:
+![Next.js](https://img.shields.io/badge/Next.js-16-black)
+![TypeScript](https://img.shields.io/badge/TypeScript-5-blue)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4-06B6D4)
+![Vercel](https://img.shields.io/badge/Vercel-Ready-black)
+
+## Возможности
+
+- 🔍 **Поиск по 10+ ресурсам** — 4x4forum.ru, drive2.ru, forum.autotravel.ru, expedition.ru, wikiloc, klimovs-travels.ru, ttrails.ru, trekkingmania.ru и др.
+- 🎯 **Умная фильтрация** — отсеивает шум (музыка, товары, тех. статьи), ранжирует по релевантности
+- ✅ **Проверка ссылок** — проверяет доступность каждого трека для скачивания
+- 📦 **Форматы GPX/KMZ/KML** — определяет формат и показывает бейдж
+- 🏔️ **10 популярных направлений** — Алтай, Кавказ, Карелия, Кольский, Дагестан, Урал, Байкал, Камчатка, Саяны, Якутия
+- 🌑 **Тёмная тема** — стильный UI с акцентом amber/gold
+
+## Технологии
+
+- **Next.js 16** (App Router, Server Actions)
+- **TypeScript** (strict mode)
+- **Tailwind CSS 4**
+- **Lucide React** (icons)
+- **Vercel** (deployment)
+
+## Быстрый старт
 
 ```bash
+# Установка
+npm install
+
+# Разработка
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+
+# Production build
+npm run build
+npm start
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Откройте [http://localhost:3000](http://localhost:3000) в браузере.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## API
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### `POST /api/search`
 
-## Learn More
+Поиск GPS-треков по региону.
 
-To learn more about Next.js, take a look at the following resources:
+**Request:**
+```json
+{
+  "region": "Алтай",
+  "limit": 10,
+  "verify": true
+}
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+**Response:**
+```json
+{
+  "region": "Алтай",
+  "tracks": [
+    {
+      "title": "Ороктойская Тропа, Горный Алтай",
+      "source": "wikiloc.com",
+      "url": "https://ru.wikiloc.com/...",
+      "downloadUrl": null,
+      "format": null,
+      "available": true,
+      "needsRegistration": false,
+      "relevanceScore": 5.2
+    }
+  ],
+  "totalFound": 16,
+  "totalAvailable": 8,
+  "searchTimeSeconds": 25.3
+}
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Ресурсы для поиска
 
-## Deploy on Vercel
+| Ресурс | Приоритет | Регистрация | Описание |
+|--------|-----------|-------------|----------|
+| 4x4forum.ru | 1 | Да | Крупнейший форум внедорожников |
+| drive2.ru | 2 | Нет | Крупнейшее автосообщество РФ |
+| forum.autotravel.ru | 3 | Да | Форум автопутешественников |
+| expedition.ru | 4 | Да | Форум экспедиций |
+| klimovs-travels.ru | 5 | Нет | GPS-треки экспедиций Климова |
+| wikiloc.com | 6 | Нет | Международная база треков |
+| ttrails.ru | 7 | Нет | Тропинки.ру — маршруты с GPX |
+| trekkingmania.ru | 8 | Нет | Путеводители с треками |
+| ykoctpa.ru | 9 | Нет | У костра — GPS-треки и навигация |
+| VK | 10 | Нет | Группы автопутешественников |
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Деплой на Vercel
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Проект готов к деплою на Vercel:
+
+1. Зайдите на [vercel.com](https://vercel.com)
+2. Импортируйте репозиторий `Wasp1977/trckfndr`
+3. Нажмите **Deploy**
+
+Никаких дополнительных переменных окружения не требуется.
+
+> **Примечание:** Для работы поиска в production-среде Vercel необходимо настроить доступ к web search API. Это можно сделать через переменную окружения `SEARCH_API_URL`, либо развернуть собственный search proxy.
+
+## Структура проекта
+
+```
+src/
+├── app/
+│   ├── api/search/route.ts   — API endpoint для поиска
+│   ├── globals.css           — Global styles + animations
+│   ├── layout.tsx            — Root layout (dark theme)
+│   └── page.tsx              — Main search UI
+└── lib/
+    └── tracks.ts             — Core logic (resources, scoring, filtering)
+```
+
+## Лицензия
+
+MIT
